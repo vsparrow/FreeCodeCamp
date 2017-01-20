@@ -6,6 +6,15 @@ User Story: I can reset the clock for my next pomodoro.
 User Story: I can customize the length of each pomodoro.
 -->
 <h1 id="thisIsMyClock">MY CLOCK</h1>
+
+
+<div><span id="sessionOrBreak">Session</span> 
+  <span id="timeLeft">25</span>
+  <p></p>
+  <button id="startTimer">Start</button>
+  <button id="pauseTimer">Pause</button>
+</div>
+
 <div>
   Break Length <span id="breakLength">55</span>
   <button id="breakDecrease">decrease</button>
@@ -18,12 +27,7 @@ User Story: I can customize the length of each pomodoro.
   <button id="sessionIncrease">increase</button>
 </div>
 
-<div><span id="sessionOrBreak">Session</span> 
-  <span id="timeLeft">25</span>
-  <button id="startTimer">Start</button>
-  <button id="pauseTimer">Pause</button>
-</div>
-
+<!--
 <b>***:*FOCUS now: error when clock started and paused, when decrease break or session? its off by one minute
 
 </b><br>now display clock on web page<br>Also signle digits seconds should display 2 digits ie: 5:05 not 5: 5<br>START BUTTON: what happens when press while started 
@@ -36,10 +40,12 @@ User Story: I can customize the length of each pomodoro.
 <br>
 DONE: this.restartedClock=false :: working on this to get a paused clock to continue from where it left off.
 <BR>
-
+-->
 </html>
 
 <css>
+#sessionOrBreak {color: white}
+#timeLeft {color: white}
 </css>
 
 <script>
@@ -63,6 +69,11 @@ $(document).ready(function(){
                                    });
   $("#pauseTimer").click(function(){stopTimer(clock);//alert("PLACE FUNCTION HERE")
                                    });
+  // hide testing items  *** if hidden clock doesnt work
+ // document.getElementById("sessionOrBreak").style.visibility="hidden";
+ // document.getElementById("timeLeft").style.visibility="hidden";
+
+  
 }); //doc ready
 
 
@@ -89,9 +100,11 @@ function clockClass(){   //class clock
   
   function decreaseBreak(item){ 
     if (item.timerStarted===false){
-    if (item.breakLength != 1) {item.breakLength--; displayBreakLength(item.breakLength);
+    if (item.breakLength != 1) {item.breakLength--; displayBreakLength(item.breakLength) ;
       //this line changed for restart clock                                                     
-      if(item.restartedClock==true && item.minutes!=0 && item.breakOrSession =="Break"){item.seconds=0; item.minutes=item.breakLength;}
+      if(item.restartedClock==true && item.minutes!=0 && item.breakOrSession =="Break"){item.seconds=0; item.minutes=item.breakLength; 
+        displayTimer("Session",item.sessionLength,item)     // *******************************                                                                                 
+      }
       //*******************************
     } //if item.breakLength 
     } //item.timerStarted  
@@ -99,24 +112,31 @@ function clockClass(){   //class clock
   function increaseBreak(item){ 
     if (item.timerStarted===false){
     item.breakLength++; displayBreakLength(item.breakLength);
-    if(item.restartedClock==true  && item.breakOrSession =="Break"){item.seconds=0; item.minutes=item.breakLength;}
+    if(item.restartedClock==true  && item.breakOrSession =="Break"){item.seconds=0; item.minutes=item.breakLength;
+      displayTimer("Session",item.sessionLength,item)     // *******************************                                                                      
+      }
     } //item.timerStarted
   }// incraseBreak
   function decreaseSession(item) { 
    if(item.timerStarted==false){ 
-    if(item.sessionLength != 1) {item.sessionLength--; displaySessionLength(item.sessionLength);
-      if(item.timerStarted==false){displayTimer("Session",item.sessionLength,item)}
+    if(item.sessionLength != 1) {item.sessionLength--; displaySessionLength(item.sessionLength); 
+      displayTimer("Session",item.sessionLength,item); // ******************************************************
+      if(item.timerStarted==false){displayTimer("Session",item.sessionLength,item)  }
       if(item.restartedClock==true && item.minutes!=0 && item.breakOrSession =="Session"){item.seconds=0;       
-        item.minutes=item.sessionLength;} 
+        item.minutes=item.sessionLength;
+        displayTimer("Session",item.sessionLength,item)     // *******************************                                                                            
+        } 
     } //if sessionLength != 1
    } //if item.started==false  
   } //decrease session
 
   function increaseSession(item) { 
     if(item.timerStarted==false){ 
-    item.sessionLength++; displaySessionLength(item.sessionLength); 
+    item.sessionLength++; displaySessionLength(item.sessionLength); displayTimer("Session",item.sessionLength,item)     // *******************************
     if(item.timerStarted==false){displayTimer("Session",item.sessionLength,item)} 
-       if(item.restartedClock==true  && item.breakOrSession =="Session"){item.seconds=0; item.minutes=item.sessionLength;} 
+       if(item.restartedClock==true  && item.breakOrSession =="Session"){item.seconds=0; item.minutes=item.sessionLength;
+        displayTimer("Session",item.sessionLength,item)     // *******************************                                                                
+        } 
     } //item.timerStarted==false  
   }//increaseSession
 
