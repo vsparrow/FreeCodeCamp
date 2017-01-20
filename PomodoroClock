@@ -1,0 +1,178 @@
+<html>
+<!-- <br>User Story: I can start a 25 minute pomodoro, and the timer will go off once 25 minutes has elapsed.
+<br>
+User Story: I can reset the clock for my next pomodoro.
+<br>
+User Story: I can customize the length of each pomodoro.
+-->
+<h1 id="thisIsMyClock">MY CLOCK</h1>
+<div>
+  Break Length <span id="breakLength">55</span>
+  <button id="breakDecrease">decrease</button>
+  <button id="breakIncrease">increase</button>
+</div>
+
+<div>
+  Session Length <span id="sessionLength">255</span>
+  <button id="sessionDecrease">decrease</button>
+  <button id="sessionIncrease">increase</button>
+</div>
+
+<div><span id="sessionOrBreak">Session</span> 
+  <span id="timeLeft">25</span>
+  <button id="startTimer">Start</button>
+  <button id="pauseTimer">Pause</button>
+</div>
+
+<b>***:*FOCUS now: error when clock started and paused, when decrease break or session? its off by one minute
+
+</b><br>now display clock on web page<br>Also signle digits seconds should display 2 digits ie: 5:05 not 5: 5<br>START BUTTON: what happens when press while started 
+  <br>Done
+  cannot increase or decrase unless paused or not started
+  <br>
+  function decreaseSession(item): start with 
+<br> 
+  DONEif paused and click incrase or decrease. the timer should start off with new time
+<br>
+DONE: this.restartedClock=false :: working on this to get a paused clock to continue from where it left off.
+<BR>
+
+</html>
+
+<css>
+</css>
+
+<script>
+// ********************************************
+// START **************************************
+$(document).ready(function(){
+
+  var clock = new clockClass();
+  //clock.breakDecrease();
+  //alert(clock.breakLength);  
+  displayBreakLength(clock.breakLength);  
+  displaySessionLength(clock.sessionLength);
+  displayTimer("Session",clock.sessionLength, clock);
+  
+  //$( "#breakDecrease" ).click(function() { alert("what is up") });  
+  $("#breakDecrease").click(function(){decreaseBreak(clock)});
+  $("#breakIncrease").click(function(){increaseBreak(clock)});  
+  $("#sessionDecrease").click(function(){decreaseSession(clock)});
+  $("#sessionIncrease").click(function(){increaseSession(clock)});
+  $("#startTimer").click(function(){  startTimer(clock);//alert("PLACE FUNCTION HERE")
+                                   });
+  $("#pauseTimer").click(function(){stopTimer(clock);//alert("PLACE FUNCTION HERE")
+                                   });
+}); //doc ready
+
+
+function clockClass(){   //class clock
+  this.breakLength = 5;
+  this.sessionLength = 6;
+  this.seconds="NOT SET"
+  this.minutes="NOT SET";
+  this.thisInstance="";
+  this.timerStarted = false;
+  this.restartedClock=false;
+  this.breakOrSession = "Session";
+  this.breakDecrease = function(){if(this.breakLength >1) {this.breakLength--}}
+  this.breakIncrease = function(){this.breakLength++}
+  this.sessionDecrease = function(){if(this.sessionLength >1) {this.sessionLength--}}
+  this.sessionIncrease = function(){this.sessionLength++}  
+  //getBreakLength(){return this.breakLength;}
+  //getSessionLength(){return this.sessionLength;}
+} //clock
+
+// ********************************************
+// time manipulation ************
+
+  
+  function decreaseBreak(item){ 
+    if (item.timerStarted===false){
+    if (item.breakLength != 1) {item.breakLength--; displayBreakLength(item.breakLength);
+      //this line changed for restart clock                                                     
+      if(item.restartedClock==true && item.minutes!=0 && item.breakOrSession =="Break"){item.seconds=0; item.minutes=item.breakLength;}
+      //*******************************
+    } //if item.breakLength 
+    } //item.timerStarted  
+    }//decreaseBreak  
+  function increaseBreak(item){ 
+    if (item.timerStarted===false){
+    item.breakLength++; displayBreakLength(item.breakLength);
+    if(item.restartedClock==true  && item.breakOrSession =="Break"){item.seconds=0; item.minutes=item.breakLength;}
+    } //item.timerStarted
+  }// incraseBreak
+  function decreaseSession(item) { 
+   if(item.timerStarted==false){ 
+    if(item.sessionLength != 1) {item.sessionLength--; displaySessionLength(item.sessionLength);
+      if(item.timerStarted==false){displayTimer("Session",item.sessionLength,item)}
+      if(item.restartedClock==true && item.minutes!=0 && item.breakOrSession =="Session"){item.seconds=0;       
+        item.minutes=item.sessionLength;} 
+    } //if sessionLength != 1
+   } //if item.started==false  
+  } //decrease session
+
+  function increaseSession(item) { 
+    if(item.timerStarted==false){ 
+    item.sessionLength++; displaySessionLength(item.sessionLength); 
+    if(item.timerStarted==false){displayTimer("Session",item.sessionLength,item)} 
+       if(item.restartedClock==true  && item.breakOrSession =="Session"){item.seconds=0; item.minutes=item.sessionLength;} 
+    } //item.timerStarted==false  
+  }//increaseSession
+
+
+  function stopTimer(item){clearInterval(item.thisInstance); item.timerStarted=false; item.restartedClock=true; console.log("Stopped");}
+  function startTimer(item){
+    //setInterval(function,milliseconds)
+    var breakOrSession = item.breakOrSession;
+    var minutes = 0;
+    var seconds = 0;
+  if(item.timerStarted==true) {return 0 }  //this is here so we dont start 2 clocks. if clock running, nothing happens.
+    item.timerStarted=true;
+    //alert(timerOrSession);
+    if(item.breakOrSession == "Session") {minutes = item.sessionLength; seconds = 60; minutes--}
+    else if (item.breakOrSession == "Break") {minutes = item.breakLength; seconds = 60;minutes--}
+    //alert(timerOrSession + " " + minutes + " " + seconds) 
+    var myInterval=setInterval(function(){if(item.timerStarted==true){
+      // *****************************************
+      // CHANGES HERE to accomidate restarting clock
+      if(item.restartedClock==true){
+        console.log("restartng clock at " +item.minutes + " " + item.seconds);
+        item.restartedClock=false;
+        minutes = item.minutes;
+        seconds = item.seconds;
+      }      
+      //changed the if below to else if
+      // *************************************
+      else if(seconds == 0 && minutes == 0) {//alert("done!")
+        if(item.breakOrSession == "Session"){item.breakOrSession="Break"; minutes=item.breakLength; seconds=59;minutes--;}
+        else if(item.breakOrSession=="Break"){item.breakOrSession="Session"; minutes=item.sessionLength;seconds=59;minutes--;}
+      }
+      else if(seconds==0){seconds=59;minutes--;}
+      else seconds--;
+      console.log(minutes + " " + seconds + " " +item.breakOrSession)
+      displayTimer(1,1,item);
+      item.minutes=minutes;
+      item.seconds=seconds;
+      }},1000);
+    item.thisInstance=myInterval;
+    
+  }
+// ****************************************
+// display functions **********************
+//function displayBreak(){alert("COOL");document.getElementById("breakLength").innerText=breakLength;}
+function displayBreakLength(digits){document.getElementById("breakLength").innerText=digits;}  
+function displaySessionLength(digits){document.getElementById("sessionLength").innerText=digits;} 
+function displayTimer(sessionType,digits,item){  document.getElementById("sessionOrBreak").innerText=sessionType;
+ document.getElementById("timeLeft").innerText=digits;
+// display big clock here
+  if(item.minutes == "NOT SET")
+    {document.getElementById("thisIsMyClock").innerText=item.sessionLength + " : " + "00" + " " +item.breakOrSession}    
+  else {                                              
+    document.getElementById("thisIsMyClock").innerText=item.minutes + " : " + (item.seconds < 10 ? "0" : "") +item.seconds +" " +item.breakOrSession                                 }            
+//***                                               
+}  //displayTimer
+
+  
+
+</script>
