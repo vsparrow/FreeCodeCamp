@@ -1,0 +1,21 @@
+<html>
+User Story: I can play a game of Tic Tac Toe with the computer.
+<br>
+User Story: My game will reset as soon as it's over so I can play again.
+<br>
+User Story: I can choose whether I want to play as X or O.
+
+<div id="placeHere">
+  
+</div>
+
+<br>
+TODO: display ttt grid
+</html>
+<css>
+</css>
+<script>
+$(document).ready(function(){
+  $("#placeHere").html("HELLO")
+}); // doc ready
+</script>
