@@ -11,11 +11,12 @@ User Story: I can choose whether I want to play as X or O.
 </div>
 
 <br>
-TODO:<b>return to function gamePlay, figure out logic on who goes first/ seconds etc<br> 2: add clickable elements to grid</b> 
+TODO:<b>working on function game()<br>4return to function gamePlay, figure out logic on who goes first/ seconds etc<br> 2: add clickable elements to grid<br></b> 
 <br>DONE
 <br>0: display ttt grid
 <br>1: Have user choose X or Y :leaving off at logging to console functio chhoseXorY<br>
-3: add reset function 
+3: add reset function <br>
+5: upon reset, clear or new ttt class isntance (would clean upon new instance of class tttClass)
 </html>
 
 <css>
@@ -36,6 +37,15 @@ $(document).ready(function(){
 function startGame(){    //starts the game, also come back here for a reset
   onePlayerOrTwo();  //was in document ready, moved here to make reset easier
 } //end startGame
+
+
+function tttClass(){           //TicTacToe class
+  this.players="a";        //one or two
+  this.player2="b";        // human or computer
+  this.player1Letter= "c"; //X or Y
+  this.player2Letter= "d"; //X or Y
+  this.currentPlayer= "e"; //1 or 2  
+}
 
 // ***************
 // Grid and Display
@@ -94,15 +104,35 @@ function chooseXorY(numberOfPlayers){
   $("#chooseY").click(function(){ answer="Y"; console.log("function chooseXorY: player choose " + answer);  gameSetup(numberOfPlayers,answer) });
 } //chooseXorY
 
+// *********************************************
+// GAME LOGIC
+
 function gameSetup(numberOfPlayers,player1Letter){
   console.log("We got to gameSetup: numberOfPlayers: " + numberOfPlayers + " ; player1Letter is " +player1Letter);
   //add reset Button : completed
-  var addResetButton = '<br><button id="resetButton">RESET</button>';
+  var addResetButton = '<br><button id="resetButton">RESET</button><p></p>';
   $("#xOrY").html(addResetButton);
   $("#resetButton").click(function(){ startGame(); console.log("RESET WAS PRESSED")});
+  
+  //start ttt class
+  var ttt=new tttClass();
+  ttt.players=numberOfPlayers;
+  if(numberOfPlayers === "two"){ttt.player2="human"} else {ttt.player2 = "computer"}
+  ttt.player1Letter = player1Letter;
+  if(player1Letter==="X"){ttt.player2Letter="Y"}else{ ttt.player2Letter="X";}
+  if(player1Letter ==="X"){ttt.currentPlayer="player1"}else{ttt.currentPlayer="player2"}
+  console.log("Start newclass:" + ttt.players + " " + ttt.player2 + " " + ttt.player1Letter + " " + ttt.player2Letter + " " + ttt.currentPlayer)
+  
+  
+} //gameSetup()
+
+
+function game(){
   // display grid + add clickable elements
+  displayGrid();
   // playerX turn : if game singleplayer: human/computer turn ; if game multiplayer: give to player1 or 2 depending on what player1 chose
   // playerY turn : if game singleplayer: human/computer turn ; if game multiplayer: give to player1 or 2 depending on what player1 chose
-  
 }
+
+
 </script>
