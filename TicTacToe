@@ -5,17 +5,85 @@ User Story: My game will reset as soon as it's over so I can play again.
 <br>
 User Story: I can choose whether I want to play as X or O.
 
+<div id="xOrY"></div>
 <div id="placeHere">
   
 </div>
 
 <br>
-TODO: display ttt grid
+TODO:<b>1: Have user choose X or Y :leaving off at logging to console functio chhoseXorY<br> 2: add clickable elements to grid</b> 
+<br>DONE
+<br>0: display ttt grid
 </html>
+
 <css>
 </css>
+
 <script>
 $(document).ready(function(){
-  $("#placeHere").html("HELLO")
+  onePlayerOrTwo();
+  displayGrid();
+  addClick();
+  //$("#placeHere").html("HELLO")
+ // $("#topLeft").click(function(){alert("HELLO MON!")});   //this will add click
 }); // doc ready
+
+
+
+// ***************
+// Grid and Display
+//var gridArr = [["A","B","C"],[" "," "," "],[" "," "," "]];
+var gridArr = [["_","_","_"],["_","_","_"],["_","_","_"]];
+
+function displayGrid(){
+  var gridHTML = "";
+  var topLeft='<span id="topLeft">__' + gridArr[0][0] + '__</span>';
+  var topMiddle='<span id="topMiddle">__' + gridArr[0][1] + '__</span>';
+  var topRight='<span id="topRight">__' + gridArr[0][2] + '__</span>';
+  gridHTML = gridHTML  + topLeft + '|' +topMiddle+ '|' + topRight;
+  
+  var middleLeft='<span id="middleLeft">__' + gridArr[1][0] + '__</span>';
+  var middleMiddle='<span id="middleMiddle">__' + gridArr[1][1] + '__</span>';
+  var middleRight='<span id="middleRight">__' + gridArr[1][2] + '__</span>';
+  gridHTML = gridHTML  + '<br>'+middleLeft + '|' +middleMiddle+ '|' + middleRight;
+  
+  var bottomLeft='<span id="bottomLeft">__' + gridArr[2][0] + '__</span>';
+  var bottomMiddle='<span id="bottomMiddle">__' + gridArr[2][1] + '__</span>';
+  var bottomRight='<span id="bottomRight">__' + gridArr[2][2] + '__</span>';
+  gridHTML = gridHTML  + '<br>'+bottomLeft + '|' +bottomMiddle+ '|' + bottomRight + '<br>';
+  
+  //alert("cool");
+   //$("#placeHere").html("HELLO")
+  $("#placeHere").html(gridHTML);
+}//displayGrid
+
+function addClick(){$("#topLeft").click(function(){alert("HELLO MON!")}); }  //INCOMPLETE **********
+
+// *******************************
+// USER SELECTION
+
+function onePlayerOrTwo(){  
+  var question='<br>WOULD YOU LIKE ONE PLAYER OR TWO PLAYER GAME?';
+  question += '<br><button id="onePlayer">ONE PLAYER</button>';
+  question += '<button id="twoPlayer">TWO PLAYER</button>';
+  var answer="";
+  $("#xOrY").html(question);
+  $("#onePlayer").click(function(){ 
+    answer="one";console.log("function onePlayerOrTwo: number of players selected:" + answer); chooseXorY(answer);});
+  $("#twoPlayer").click(function(){
+    answer="two";console.log("function onePlayerOrTwo: number of players selected:" + answer); chooseXorY(answer);});  
+}//end onePlayerOrTwo
+
+function chooseXorY(numberOfPlayers){
+  var question = "<br>";
+  var answer = "";
+  if (numberOfPlayers=="two"){question += "PLAYER 1: "}
+  question += "Would you like to be X or Y?";
+  question += '<br><button id="chooseX">CHOOSE X</button>';
+  question += '<button id="chooseY">CHOOSE Y</button>';
+  
+  $("#xOrY").html(question);
+  $("#chooseX").click(function(){ answer="X"; console.log("function chooseXorY: player choose " + answer)});
+  $("#chooseY").click(function(){ answer="Y"; console.log("function chooseXorY: player choose " + answer)});
+} //chooseXorY
 </script>
