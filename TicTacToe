@@ -11,24 +11,31 @@ User Story: I can choose whether I want to play as X or O.
 </div>
 
 <br>
-TODO:<b>1: Have user choose X or Y :leaving off at logging to console functio chhoseXorY<br> 2: add clickable elements to grid</b> 
+TODO:<b>return to function gamePlay, figure out logic on who goes first/ seconds etc<br> 2: add clickable elements to grid</b> 
 <br>DONE
 <br>0: display ttt grid
+<br>1: Have user choose X or Y :leaving off at logging to console functio chhoseXorY<br>
+3: add reset function 
 </html>
 
 <css>
 </css>
 
 <script>
+// *******************
+// starting functions
 $(document).ready(function(){
-  onePlayerOrTwo();
-  displayGrid();
+  startGame();
   addClick();
+  
+  // displayGrid(); // this should come after user chooses player amout and XorY
   //$("#placeHere").html("HELLO")
  // $("#topLeft").click(function(){alert("HELLO MON!")});   //this will add click
 }); // doc ready
 
-
+function startGame(){    //starts the game, also come back here for a reset
+  onePlayerOrTwo();  //was in document ready, moved here to make reset easier
+} //end startGame
 
 // ***************
 // Grid and Display
@@ -83,7 +90,19 @@ function chooseXorY(numberOfPlayers){
   question += '<button id="chooseY">CHOOSE Y</button>';
   
   $("#xOrY").html(question);
-  $("#chooseX").click(function(){ answer="X"; console.log("function chooseXorY: player choose " + answer)});
-  $("#chooseY").click(function(){ answer="Y"; console.log("function chooseXorY: player choose " + answer)});
+  $("#chooseX").click(function(){ answer="X"; console.log("function chooseXorY: player choose " + answer); gameSetup(numberOfPlayers,answer) });
+  $("#chooseY").click(function(){ answer="Y"; console.log("function chooseXorY: player choose " + answer);  gameSetup(numberOfPlayers,answer) });
 } //chooseXorY
+
+function gameSetup(numberOfPlayers,player1Letter){
+  console.log("We got to gameSetup: numberOfPlayers: " + numberOfPlayers + " ; player1Letter is " +player1Letter);
+  //add reset Button : completed
+  var addResetButton = '<br><button id="resetButton">RESET</button>';
+  $("#xOrY").html(addResetButton);
+  $("#resetButton").click(function(){ startGame(); console.log("RESET WAS PRESSED")});
+  // display grid + add clickable elements
+  // playerX turn : if game singleplayer: human/computer turn ; if game multiplayer: give to player1 or 2 depending on what player1 chose
+  // playerY turn : if game singleplayer: human/computer turn ; if game multiplayer: give to player1 or 2 depending on what player1 chose
+  
+}
 </script>
