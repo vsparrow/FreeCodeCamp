@@ -5,6 +5,7 @@ User Story: My game will reset as soon as it's over so I can play again.
 <br>
 User Story: I can choose whether I want to play as X or O.
 
+<div id="message"></div>
 <div id="xOrY"></div>
 <div id="placeHere">
   
@@ -72,9 +73,20 @@ function displayGrid(){
   //alert("cool");
    //$("#placeHere").html("HELLO")
   $("#placeHere").html(gridHTML);
+  addClick(); //added here becuase grid must display before click enabled
 }//displayGrid
 
-function addClick(){$("#topLeft").click(function(){alert("HELLO MON!")}); }  //INCOMPLETE **********
+function addClick(){
+  $("#topLeft").click(function(){alert("HELLO MON! tl")}); 
+  $("#topMiddle").click(function(){alert("HELLO MON! tm")});                 
+  $("#topRight").click(function(){alert("HELLO MON! tr")});
+  $("#middleLeft").click(function(){alert("HELLO MON! ml")}); 
+  $("#middleMiddle").click(function(){alert("HELLO MON! mm")});                 
+  $("#middleRight").click(function(){alert("HELLO MON! mr")});
+  $("#bottomLeft").click(function(){alert("HELLO MON! bl")}); 
+  $("#bottomMiddle").click(function(){alert("HELLO MON! nm")});                 
+  $("#bottomRight").click(function(){alert("HELLO MON! br")});
+} //addClick  //INCOMPLETE **********
 
 // *******************************
 // USER SELECTION
@@ -121,17 +133,24 @@ function gameSetup(numberOfPlayers,player1Letter){
   ttt.player1Letter = player1Letter;
   if(player1Letter==="X"){ttt.player2Letter="Y"}else{ ttt.player2Letter="X";}
   if(player1Letter ==="X"){ttt.currentPlayer="player1"}else{ttt.currentPlayer="player2"}
-  console.log("Start newclass:" + ttt.players + " " + ttt.player2 + " " + ttt.player1Letter + " " + ttt.player2Letter + " " + ttt.currentPlayer)
   
+  game(ttt);
   
 } //gameSetup()
 
 
-function game(){
+function game(ttt){
+  console.log("in function game():" + ttt.players + " " + ttt.player2 + " " + ttt.player1Letter + " " + ttt.player2Letter + " " + ttt.currentPlayer)
+  console.log(ttt.currentPlayer)
+  var message = ttt.currentPlayer + " it is your turn.";
+  $("#message").html(message)
   // display grid + add clickable elements
   displayGrid();
+  
   // playerX turn : if game singleplayer: human/computer turn ; if game multiplayer: give to player1 or 2 depending on what player1 chose
   // playerY turn : if game singleplayer: human/computer turn ; if game multiplayer: give to player1 or 2 depending on what player1 chose
+
+
 }
 
 
