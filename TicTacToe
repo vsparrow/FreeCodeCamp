@@ -53,7 +53,7 @@ function tttClass(){           //TicTacToe class
 //var gridArr = [["A","B","C"],[" "," "," "],[" "," "," "]];
 var gridArr = [["_","_","_"],["_","_","_"],["_","_","_"]];
 
-function displayGrid(){
+function displayGrid(ttt){
   var gridHTML = "";
   var topLeft='<span id="topLeft">__' + gridArr[0][0] + '__</span>';
   var topMiddle='<span id="topMiddle">__' + gridArr[0][1] + '__</span>';
@@ -73,13 +73,13 @@ function displayGrid(){
   //alert("cool");
    //$("#placeHere").html("HELLO")
   $("#placeHere").html(gridHTML);
-  addClick(); //added here becuase grid must display before click enabled
+  addClick(ttt); //added here becuase grid must display before click enabled
 }//displayGrid
 
-function addClick(){
+function addClick(ttt){
   $("#topLeft").click(function(){alert("HELLO MON! tl")}); 
   $("#topMiddle").click(function(){alert("HELLO MON! tm")});                 
-  $("#topRight").click(function(){alert("HELLO MON! tr")});
+  $("#topRight").click(function(){alert("HELLO MON! tr");gridUpdate(ttt,"topRight")});
   $("#middleLeft").click(function(){alert("HELLO MON! ml")}); 
   $("#middleMiddle").click(function(){alert("HELLO MON! mm")});                 
   $("#middleRight").click(function(){alert("HELLO MON! mr")});
@@ -145,13 +145,30 @@ function game(ttt){
   var message = ttt.currentPlayer + " it is your turn.";
   $("#message").html(message)
   // display grid + add clickable elements
-  displayGrid();
+  displayGrid(ttt);
   
   // playerX turn : if game singleplayer: human/computer turn ; if game multiplayer: give to player1 or 2 depending on what player1 chose
   // playerY turn : if game singleplayer: human/computer turn ; if game multiplayer: give to player1 or 2 depending on what player1 chose
+  
+} //game
 
-
-}
-
-
+function gridUpdate(ttt,gi){ //gridItem = gi
+//var gridArr = [["_","_","_"],["_","_","_"],["_","_","_"]];
+console.log("in function gridUpdate():" + ttt.players + " " + ttt.player2 + " " + ttt.player1Letter + " " + ttt.player2Letter + " " + ttt.currentPlayer)
+console.log(gi);  
+ //which player is current player
+ //var current = ttt.currentPlayer;
+ //what is current players letter
+  var letter="?"
+  if(ttt.currentPlayer=="player1"){letter=ttt.player1Letter}
+  if(ttt.currentPlayer=="player2"){letter=ttt.player2Letter}  
+ //update grid with letter
+  switch(gi){
+    case  "topRight": console.log("We got into switch statement"); break;
+  }
+  
+ //change current player to other player
+ //call game 
+  
+}//gridUpdaate
 </script>
