@@ -12,12 +12,15 @@ User Story: I can choose whether I want to play as X or O.
 </div>
 
 <br>
-TODO:<b>working on function game()<br>4return to function gamePlay, figure out logic on who goes first/ seconds etc<br> 2: add clickable elements to grid<br></b> 
+TODO:<b> add function prevent changing box if it is used :: add logic to end game when all boxes filled <br>:make function that addClick events call to update grid. thhat should then call game again<br>4return to function gamePlay, figure out logic on who goes first/ seconds etc<br> 2: add clickable elements to grid<br></b> 
 <br>DONE
 <br>0: display ttt grid
 <br>1: Have user choose X or Y :leaving off at logging to console functio chhoseXorY<br>
 3: add reset function <br>
 5: upon reset, clear or new ttt class isntance (would clean upon new instance of class tttClass)
+6:working on function game()<br>
+7:working on gridUpdate  switch statement <br>
+8:function game should call checkgameover to check if all boxes filled.<br>
 </html>
 
 <css>
@@ -77,15 +80,15 @@ function displayGrid(ttt){
 }//displayGrid
 
 function addClick(ttt){
-  $("#topLeft").click(function(){alert("HELLO MON! tl")}); 
-  $("#topMiddle").click(function(){alert("HELLO MON! tm")});                 
-  $("#topRight").click(function(){alert("HELLO MON! tr");gridUpdate(ttt,"topRight")});
-  $("#middleLeft").click(function(){alert("HELLO MON! ml")}); 
-  $("#middleMiddle").click(function(){alert("HELLO MON! mm")});                 
-  $("#middleRight").click(function(){alert("HELLO MON! mr")});
-  $("#bottomLeft").click(function(){alert("HELLO MON! bl")}); 
-  $("#bottomMiddle").click(function(){alert("HELLO MON! nm")});                 
-  $("#bottomRight").click(function(){alert("HELLO MON! br")});
+  $("#topLeft").click(function(){gridUpdate(ttt,"topLeft")}); 
+  $("#topMiddle").click(function(){gridUpdate(ttt,"topMiddle")});                 
+  $("#topRight").click(function(){gridUpdate(ttt,"topRight")});
+  $("#middleLeft").click(function(){gridUpdate(ttt,"middleLeft")}); 
+  $("#middleMiddle").click(function(){gridUpdate(ttt,"middleMiddle")});                 
+  $("#middleRight").click(function(){gridUpdate(ttt,"middleRight")});
+  $("#bottomLeft").click(function(){gridUpdate(ttt,"bottomLeft")}); 
+  $("#bottomMiddle").click(function(){gridUpdate(ttt,"bottomMiddle")});                 
+  $("#bottomRight").click(function(){gridUpdate(ttt,"bottomRight")});
 } //addClick  //INCOMPLETE **********
 
 // *******************************
@@ -124,7 +127,7 @@ function gameSetup(numberOfPlayers,player1Letter){
   //add reset Button : completed
   var addResetButton = '<br><button id="resetButton">RESET</button><p></p>';
   $("#xOrY").html(addResetButton);
-  $("#resetButton").click(function(){ startGame(); console.log("RESET WAS PRESSED")});
+  $("#resetButton").click(function(){ gridArr = [["_","_","_"],["_","_","_"],["_","_","_"]];startGame(); console.log("RESET WAS PRESSED")});
   
   //start ttt class
   var ttt=new tttClass();
@@ -142,11 +145,16 @@ function gameSetup(numberOfPlayers,player1Letter){
 function game(ttt){
   console.log("in function game():" + ttt.players + " " + ttt.player2 + " " + ttt.player1Letter + " " + ttt.player2Letter + " " + ttt.currentPlayer)
   console.log(ttt.currentPlayer)
-  var message = ttt.currentPlayer + " it is your turn.";
-  $("#message").html(message)
-  // display grid + add clickable elements
-  displayGrid(ttt);
   
+  // what if grid has been filled? game over:
+  if (!checkGameOver(ttt))
+  {
+    var message = ttt.currentPlayer + " it is your turn.";
+    $("#message").html(message)
+  
+    // display grid + add clickable elements
+    displayGrid(ttt);
+  } //if not gameover
   // playerX turn : if game singleplayer: human/computer turn ; if game multiplayer: give to player1 or 2 depending on what player1 chose
   // playerY turn : if game singleplayer: human/computer turn ; if game multiplayer: give to player1 or 2 depending on what player1 chose
   
@@ -164,11 +172,36 @@ console.log(gi);
   if(ttt.currentPlayer=="player2"){letter=ttt.player2Letter}  
  //update grid with letter
   switch(gi){
-    case  "topRight": console.log("We got into switch statement"); break;
+    case "topLeft"  :  gridArr[0][0] = letter; break;  
+    case "topMiddle":  gridArr[0][1] = letter; break;
+    case "topRight" :  gridArr[0][2] = letter; break; //console.log("We got into switch statement"); break;
+    case "middleLeft"  :  gridArr[1][0] = letter; break;  
+    case "middleMiddle":  gridArr[1][1] = letter; break;
+    case "middleRight" :  gridArr[1][2] = letter; break; //console.log("We got into switch statement"); break;  
+    case "bottomLeft"  :  gridArr[2][0] = letter; break;  
+    case "bottomMiddle":  gridArr[2][1] = letter; break;
+    case "bottomRight" :  gridArr[2][2] = letter; break; //console.log("We got into switch statement"); break;    
   }
-  
+  console.log(gridArr);
  //change current player to other player
+  if(ttt.currentPlayer=="player1"){ttt.currentPlayer="player2"} else {ttt.currentPlayer="player1"}
+  
  //call game 
+  game(ttt);
   
 }//gridUpdaate
+
+
+function checkGameOver(ttt){
+  var gameover = true;
+  for(i=0;i<gridArr.length;i++)
+    {
+      for(j=0;j<gridArr[i].length;j++)
+        {
+          if(gridArr[i][j]=="_"){gameover=false;}
+        }
+    }
+  if(gameover==true) {console.log("GAME OVER"); displayGrid(ttt); $("#message").html('<b>GAME OVER</b>')}
+  return gameover;
+}// end checkGameOVer
 </script>
