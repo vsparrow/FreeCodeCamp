@@ -12,7 +12,7 @@ User Story: I can choose whether I want to play as X or O.
 </div>
 
 <br>
-TODO:<b> add function prevent changing box if it is used :: add logic to end game when all boxes filled <br>:make function that addClick events call to update grid. thhat should then call game again<br>4return to function gamePlay, figure out logic on who goes first/ seconds etc<br> 2: add clickable elements to grid<br></b> 
+TODO:<b> move call of  checkWinner to function such that last click is updated, and then we can end game. <br> add winner logic , if all boxes filled, player X wins :: <br>add logic to end game when all boxes filled <br>:make function that addClick events call to update grid. thhat should then call game again<br>4return to function gamePlay, figure out logic on who goes first/ seconds etc<br> 2: add clickable elements to grid<br></b> 
 <br>DONE
 <br>0: display ttt grid
 <br>1: Have user choose X or Y :leaving off at logging to console functio chhoseXorY<br>
@@ -21,6 +21,8 @@ TODO:<b> add function prevent changing box if it is used :: add logic to end gam
 6:working on function game()<br>
 7:working on gridUpdate  switch statement <br>
 8:function game should call checkgameover to check if all boxes filled.<br>
+9: add function checkIfUsed prevent changing box if it is used. add checkIfUsed as a test in gridUpdate. if comes back true prevent updates to box. 
+10:::checkWinner() not alerting to winner<
 </html>
 
 <css>
@@ -161,6 +163,7 @@ function game(ttt){
 } //game
 
 function gridUpdate(ttt,gi){ //gridItem = gi
+ 
 //var gridArr = [["_","_","_"],["_","_","_"],["_","_","_"]];
 console.log("in function gridUpdate():" + ttt.players + " " + ttt.player2 + " " + ttt.player1Letter + " " + ttt.player2Letter + " " + ttt.currentPlayer)
 console.log(gi);  
@@ -170,7 +173,8 @@ console.log(gi);
   var letter="?"
   if(ttt.currentPlayer=="player1"){letter=ttt.player1Letter}
   if(ttt.currentPlayer=="player2"){letter=ttt.player2Letter}  
- //update grid with letter
+ if(!checkIfUsed(ttt,gi)){ 
+  //update grid with letter
   switch(gi){
     case "topLeft"  :  gridArr[0][0] = letter; break;  
     case "topMiddle":  gridArr[0][1] = letter; break;
@@ -183,12 +187,14 @@ console.log(gi);
     case "bottomRight" :  gridArr[2][2] = letter; break; //console.log("We got into switch statement"); break;    
   }
   console.log(gridArr);
+  //check if winner 
+  if(checkWinner(ttt,letter)){alert("WINNER");}  //******************************
  //change current player to other player
   if(ttt.currentPlayer=="player1"){ttt.currentPlayer="player2"} else {ttt.currentPlayer="player1"}
   
  //call game 
   game(ttt);
-  
+ }//checkIfUsed
 }//gridUpdaate
 
 
@@ -204,4 +210,39 @@ function checkGameOver(ttt){
   if(gameover==true) {console.log("GAME OVER"); displayGrid(ttt); $("#message").html('<b>GAME OVER</b>')}
   return gameover;
 }// end checkGameOVer
+
+
+function checkIfUsed(ttt,gi){  //gridItem = gi
+  var used = false;
+  switch(gi){
+    case "topLeft"  :     if (gridArr[0][0] != "_"){used = true;}  break;  
+    case "topMiddle":     if (gridArr[0][1] != "_"){used = true;}  break;
+    case "topRight" :     if (gridArr[0][2] != "_"){used = true;}   break; //console.log("We got into switch statement"); break;
+    case "middleLeft"  :  if (gridArr[1][0] != "_"){used = true;}   break;  
+    case "middleMiddle":  if (gridArr[1][1] != "_"){used = true;}   break;
+    case "middleRight" :  if (gridArr[1][2] != "_"){used = true;}   break; //console.log("We got into switch statement"); break;  
+    case "bottomLeft"  :  if (gridArr[2][0] != "_"){used = true;}   break;  
+    case "bottomMiddle":  if (gridArr[2][1] != "_"){used = true;}   break;
+    case "bottomRight" :  if (gridArr[2][2] != "_"){used = true;}   break; //console.log("We got into switch statement"); break;    
+  }  
+  //if(used == true){alert(gi + " has already been used")}
+  return used;//return true or false
+}
+
+function checkWinner(ttt,letter){  // check after click approved  
+   //var gridArr = [["_","_","_"],["_","_","_"],["_","_","_"]]; 
+  var winner = false;
+  console.log("inside checkWinner this is letter:" +letter);
+  if(gridArr[0][0] == letter && gridArr[0][1] == letter && gridArr[0][2] == letter ){winner = true}  //top 
+  if(gridArr[1][0] == letter && gridArr[1][1] == letter && gridArr[1][2] == letter ){winner = true}  //middle
+  if(gridArr[2][0] == letter && gridArr[2][1] == letter && gridArr[2][2] == letter ){winner = true}  //bottom 
+  if(gridArr[0][0] == letter && gridArr[1][0] == letter && gridArr[2][0] == letter ){winner = true}  //left toptobottom
+  if(gridArr[0][1] == letter && gridArr[1][1] == letter && gridArr[2][1] == letter ){winner = true}  //middle toptobottom
+  if(gridArr[0][2] == letter && gridArr[1][2] == letter && gridArr[2][2] == letter ){winner = true}  //right toptobottom
+  if(gridArr[2][0] == letter && gridArr[1][1] == letter && gridArr[0][2] == letter ){winner = true}  //bottom left to top right x
+  if(gridArr[0][0] == letter && gridArr[1][1] == letter && gridArr[2][0] == letter ){winner = true}  //top left to bottom right x
+  //f(winner){console.log("we have a winner ");  alert("winner inside checkWinner");}
+  //console.log("inside checkWinner: " +gridArr[0][0]+gridArr[0][1]+gridArr[0][2]);
+  return winner;
+}
 </script>
