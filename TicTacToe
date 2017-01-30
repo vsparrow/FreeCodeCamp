@@ -1,18 +1,20 @@
 <html>
+<!--
 User Story: I can play a game of Tic Tac Toe with the computer.
 <br>
 User Story: My game will reset as soon as it's over so I can play again.
 <br>
 User Story: I can choose whether I want to play as X or O.
+-->
 
 <div id="message"></div>
 <div id="xOrY"></div>
 <div id="placeHere">
   
 </div>
-
+<!--
 <br>
-TODO:<b>delay computer logic by 1 or 2 seconds<br>display that it is the computer's turn<br></b> 
+TODO:<b><br>>when someone wins the game, update grid BEFORE alert</b> 
 <br>DONE
 <br>0: display ttt grid
 <br>1: Have user choose X or Y :leaving off at logging to console functio chhoseXorY<br>
@@ -26,9 +28,12 @@ TODO:<b>delay computer logic by 1 or 2 seconds<br>display that it is the compute
 11:create removeClick() and add to game() under checkWinner()<br>
 12:in game() ->if checkWinner: after removeClick: update message to playerCurrent is winner then offer reset/newgame and changereset button to "play again"<br>
 13check game(), will not return to human turn game->computerLogic->game in game()->if checkGameOver->if computerLogic add computer logic<br> 
+14delay computer logic by 1 or 2 seconds<br>
+15display that it is the computer's turn<br>
+16disable clicks when computer's turn, then reenable<br
 <br>
 move call of  checkWinner to function such that last click is updated, and then we can end game. <br> add winner logic , if all boxes filled, player X wins :: <br>add logic to end game when all boxes filled <br>:make function that addClick events call to update grid. thhat should then call game again<br>4return to function gamePlay, figure out logic on who goes first/ seconds etc<br> 2: add clickable elements to grid
-
+-->
 </html>
 
 <css>
@@ -178,7 +183,8 @@ function game(ttt){
       //from here make the grid unclickable.
       ttt.completed=true; //(adding becuase otherwise displaygrid below will overwrite removeClick
       removeClick(ttt);
-      $("#message").html(ttt.currentPlayer +' is the winner!!!'); alert(ttt.currentPlayer + " won the game!!!!");
+      setTimeout(function(){alert(ttt.currentPlayer + " won the game!!!!");},500);
+      $("#message").html(ttt.currentPlayer +' is the winner!!!'); 
       // end the game, offer restart 
       $("#xOrY").html('<button id="resetButton">CLICK HERE FOR A NEW GAME!!!!!!</button>')
       $("#resetButton").click(function(){ gridArr = [["_","_","_"],["_","_","_"],["_","_","_"]];startGame(); console.log("NEW GAME WAS PRESSED")});
@@ -312,6 +318,12 @@ function computerLogic(ttt){
   var grid2=-1;
   if(ttt.currentPlayer=="player1"){letter=ttt.player1Letter}
   if(ttt.currentPlayer=="player2"){letter=ttt.player2Letter}
+  displayGrid(ttt);
+  // display message its computer turn,
+  var message = "Computer's turn"; $("#message").html(message);
+  // remove user ability to click
+  removeClick(ttt); 
+  setTimeout(function(){
   //console.log("computer is " +ttt.currentPlayer + " with letter: " +letter);
   //randomly pick a free box
   //for(i=0;i<10;i++){var myRand=(Math.floor(Math.random()*3) );console.log(myRand);} //this generates rand between 0-2
@@ -327,6 +339,7 @@ function computerLogic(ttt){
   ttt.currentPlayer="player1";//if(ttt.currentPlayer=="player2"){ttt.currentPlayer=="player2"}else{ttt.currentPlayer=="player1"}
   displayGrid(ttt);
   game(ttt);
+  },1000);  
   //return completed  
 }//computerLogic
 
