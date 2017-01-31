@@ -100,4 +100,18 @@ function displayRoundCount(simon){
   $("#round").text(html);
 }  //end displayRoundCount
 
+function clickEnable(){    
+  $("#boxRed").click(function(){alert("You clicked Red")});
+  $("#boxGreen").click(function(){alert("You clicked Green")});
+  $("#boxYellow").click(function(){alert("You clicked Yellow")});
+  $("#boxBlue").click(function(){alert("You clicked Blue")});
+} //end clickEnable
+
+function clickDisable(){
+  $("#boxRed").off();
+  $("#boxGreen").off();
+  $("#boxYellow").off();
+  $("#boxBlue").off();
+}
+
 </script>
