@@ -40,7 +40,7 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
 <audio id="soundGreen">  <source src="https://s3.amazonaws.com/freecodecamp/simonSound4.mp3" type="audio/mpeg"></audio>
 
 
-<br><b>enable sound on click</b>
+<br><b>work on light on click <br>enable sound on click</b>
 <br>function needed
 <br>gameInitiate -- initiate the program
 <br>game start -- start the actual game instance
@@ -71,6 +71,7 @@ $(document).ready(function(){
 
   gameInit();
   soundOnClick();
+  lightOnClick();
   //buttonChangeColor(0)
   //clickEnable();
   //clickDisable();
@@ -171,11 +172,32 @@ function soundOnClick(){
 //var soundRed=document.getElementById("soundRed");
 //var soundBlue=document.getElementById("soundBlue");
 //var soundYellow=document.getElementById("soundYellow");
-//var soundGreen=document.getElementById("soundGreen");
-  
+//var soundGreen=document.getElementById("soundGreen");  
   $("#boxRed").click(function(){soundRed.play()})  //works
   $("#boxBlue").click(function(){soundBlue.play()})
   $("#boxYellow").click(function(){soundYellow.play()})
   $("#boxGreen").click(function(){soundGreen.play()})
 }//soundOnClick
+
+function lightOnClick(){
+  $("#boxRed").mousedown(function()
+                     {$("#boxRed").css("background", "#000000"); //setTimeout(function(){$("#boxRed").removeAttr('style');},1000);
+                     
+  });  //ff8080
+  $("#boxRed").mouseup(function(){$("#boxRed").removeAttr('style'); //alert("mouseup called")
+                                 })
+  $("#boxRed").mouseout(function(){$("#boxRed").removeAttr('style');});
+  $("#boxBlue").mousedown(function(){$("#boxBlue").css("background","#000000")});
+  $("#boxBlue").mouseup(function(){$("#boxBlue").removeAttr('style')});
+  $("#boxBlue").mouseout(function(){$("#boxBlue").removeAttr('style');});
+  $("#boxGreen").mousedown(function(){$("#boxGreen").css("background","#000000")});
+  $("#boxGreen").mouseup(function(){$("#boxGreen").removeAttr('style')});
+  $("#boxGreen").mouseout(function(){$("#boxGreen").removeAttr('style');});
+  $("#boxYellow").mousedown(function(){$("#boxYellow").css("background","#000000")});
+  $("#boxYellow").mouseup(function(){$("#boxYellow").removeAttr('style')});
+  $("#boxYellow").mouseout(function(){$("#boxYellow").removeAttr('style');});
+  
+}
+
+// $(whichButton).css("background", newColor);
 </script>
