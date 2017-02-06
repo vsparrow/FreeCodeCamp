@@ -34,13 +34,14 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
   </div>  
 </div>
 <button id="test">TEST</button>
-<audio id="soundRed"><source src="https://s3.amazonaws.com/freecodecamp/simonSound1.mp3" type="audio/mpeg"></audio>
+<audio id="soundRed" ><source src="https://s3.amazonaws.com/freecodecamp/simonSound1.mp3" type="audio/mpeg" ></audio>
 <audio id="soundBlue"><source src="https://s3.amazonaws.com/freecodecamp/simonSound2.mp3" type="audio/mpeg"></audio>
 <audio id="soundYellow"> <source src="https://s3.amazonaws.com/freecodecamp/simonSound3.mp3" type="audio/mpeg"></audio>
 <audio id="soundGreen">  <source src="https://s3.amazonaws.com/freecodecamp/simonSound4.mp3" type="audio/mpeg"></audio>
 
 
-<br><b>work on light on click <br>enable sound on click</b>
+<br><b> displayRoundsToUser(simon); //call function that displays  moves "one to current"
+  <br>work on light on click <br>enable sound on click</b>
 <br>function needed
 <br>gameInitiate -- initiate the program
 <br>game start -- start the actual game instance
@@ -67,11 +68,11 @@ DONE:1:Working on: function buttonChangeColor: add sound
 // *****************************************
 // INITIALIZE *****************************
 $(document).ready(function(){
-  //$("#startOrRestart").text("THIS IS WHERE THE START OR RESTART BUTTONS GO");
-
+  //$("#startOrRestart"). text("THIS IS WHERE THE START OR RESTART BUTTONS GO");
+  //  document.getElementById("soundRed").loop = true;
   gameInit();
-  soundOnClick();
-  lightOnClick();
+  //soundOnClick();
+  //lightOnClick();
   //buttonChangeColor(0)
   //clickEnable();
   //clickDisable();
@@ -87,18 +88,21 @@ function buttonCreateStrict(){
   $("#strict").html(b);
 }
 
-function simonClass(){  //class 
+function SimonClass(){  //class 
   this.round=[];
   this.strict=false; //true or false
+  this.roundCurrent=5; //should be less or equal  roundMax at all times
+  
+  this.roundMax=5; //FOR TESTING ONLY change to 20 in production
 }//end simon 
 
 function gameInit(){ //initialize game
-  var simon = new simonClass;  
+  var simon = new SimonClass;  
   buttonCreateStart();
   buttonCreateStrict();
   buttonStrictEnable(simon);
   buttonStartEnable(simon);
-  displayRoundCount();
+  displayRoundCount(simon);
   
 }//end gameInit
 
@@ -106,12 +110,34 @@ function buttonStrictEnable(simon){$("#buttonStrict").click(function(){
   if(simon.strict==false){simon.strict=true}else{simon.strict=false}; console.log("simon.strict is:" +simon.strict)}) 
 };//buttonStrictEnable
 function buttonStartEnable(simon){$("#startOrRestart").click(function(){
-  if(simon.round.length==0){alert("START GAME")} 
-  else {alert("restart game")}
+  if(simon.round.length==0){alert("START GAME")} else {alert("restart game")}
+  gameStart(simon);
 })}//buttonStartEnable
 
 // *********************************************************
 // GAME LOGIC***********************************************
+
+function  gameStart(simon){ //function for starting the game
+  for(i=0;i<simon.roundMax;i++){simon.round[i]=Math.floor(Math.random()*4);}    //create allmoves
+  clickDisable(); //disable buttons
+  //call game function
+  console.log(simon.round);
+  game(simon);  
+} //end gameStart
+
+
+function game(simon){//GAME FUNCTION
+  //check if win
+  
+  //update roundCurrent
+  if(simon.roundCurrent==null){simon.roundCurrent=1}else{simon.roundCurrent++;} 
+  displayRoundCount(simon);
+  //call function that displays  moves "one to current"
+  displayRoundsToUser(simon);
+  //enable clicks
+  //function that inputs clicks to match moves
+  console.log("Im in function game")
+}//end game
 
 
 function buttonChangeColor(buttonNumber){  // from 12oclock: red blue yellow green  0,1,2,3
@@ -119,10 +145,10 @@ function buttonChangeColor(buttonNumber){  // from 12oclock: red blue yellow gre
   var newColor = "#FFFFFF";
   var sound = "";
   switch(buttonNumber){
-    case 0: whichButton="#boxRed";    newColor="#ff8080"; sound=soundRed;     break;
-    case 1: whichButton="#boxBlue";   newColor="#66a3ff"; sound=soundBlue;    break;
-    case 2: whichButton="#boxYellow"; newColor="#ffffcc"; sound=soundYellow;  break;
-    case 3: whichButton="#boxGreen";  newColor="#b3ffcc"; sound=soundGreen;   break; 
+    case 0: whichButton="#boxRed";    newColor="#000000"; sound=soundRed;     break; //ff8080
+    case 1: whichButton="#boxBlue";   newColor="#000000"; sound=soundBlue;    break; //66a3ff
+    case 2: whichButton="#boxYellow"; newColor="#000000"; sound=soundYellow;  break; //ffffcc
+    case 3: whichButton="#boxGreen";  newColor="#000000"; sound=soundGreen;   break; //b3ffcc
    } //switch
   //now change color for 1 second.
   $(whichButton).css("background", newColor);
@@ -130,7 +156,7 @@ function buttonChangeColor(buttonNumber){  // from 12oclock: red blue yellow gre
   //soundRed.play();
   sound.play();
   //change back after 1 second
-  setTimeout(function(){$(whichButton).removeAttr( 'style' );},1000); 
+  setTimeout(function(){$(whichButton).removeAttr( 'style' );},900); 
 }//buttonChangeColor
 
 
@@ -143,16 +169,25 @@ var soundGreen=document.getElementById("soundGreen");
 // Display functions *************************************
 function displayRoundCount(simon){
   var html = "";
-  if(arguments.length == 0){
-    console.log("No arguments in displaySteps()");
-    html += "--"
-  }
-  else {
-    console.log("simon.round.length is "+simon.round.length);
-    html=simon.round.length;
-  }
+  //if(arguments.length == 0){   console.log("No arguments in displaySteps()");   html += "--"  }
+  //else {    console.log("simon.round.length is "+simon.round.length);    html=simon.round.length;  }
+  if (simon.roundCurrent==null){html="--"}else{html=simon.roundCurrent}
   $("#round").text(html);
 }  //end displayRoundCount
+
+function displayRoundsToUser(simon){
+  
+  //for(i=0;i<simon.roundCurrent;i++)  //dont use loop //https://scottiestech.info/2014/07/01/javascript-fun-looping-with-a-delay/
+(function theLoop (i,simon) {    // ***********************************************************************************************************************
+  setTimeout(function () {
+    //alert("simon i = " +simon.round + " ||| " + i + " |||" +simon.round[i]); 
+    buttonChangeColor(simon.round[i]);;    //change color of box   //wait 1 second then uncolor
+    if (i<simon.roundCurrent) {          // If i > 0, keep going
+      i++;theLoop(i,simon);       // Call the loop again, and pass it the current value of i
+    }
+  }, 1600);
+})(0,simon);                    // ***********************************************************************************************************************
+}//displayRoundsToUser
 
 function clickEnable(){    
   $("#boxRed").click(function(){alert("You clicked Red")});
