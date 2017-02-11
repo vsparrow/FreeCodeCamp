@@ -65,6 +65,7 @@ DONE:1:Working on: function buttonChangeColor: add sound
 </css>
 
 <script>
+
 // *****************************************
 // INITIALIZE *****************************
 $(document).ready(function(){
@@ -162,11 +163,12 @@ function clickFunction(boxNumber){
   if(boxNumber == roundArr[clickCounterUser]){    
     clickCounterUser++;   
     alert("Good job right box!");
-    if(clickCounterUser==roundCurrent){
+    if(clickCounterUser==roundMax ){alert("WIN GAME"); clickDisable()}   // ********************************************************************************
+    else if(clickCounterUser==roundCurrent){
       alert("ALRIGHT ON TO NEXT ROUND B");
       roundCurrent++; //roundCurrent should be ++
       displayRoundsToUser();//call displayRoundsToUser
-      if(clickCounterUser==roundMax ){alert("WIN GAME")}// if clickCounterUser >  "USER WINS"   // ********************************************************************************
+      
     }//if
   }
   //click was incorrect
