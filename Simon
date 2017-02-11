@@ -68,9 +68,14 @@ DONE:1:Working on: function buttonChangeColor: add sound
 // *****************************************
 // INITIALIZE *****************************
 $(document).ready(function(){
-  //$("#startOrRestart"). text("THIS IS WHERE THE START OR RESTART BUTTONS GO");
-  //  document.getElementById("soundRed").loop = true;
-  gameInit();
+  //add ability to start button so it can initialize game
+  
+  //add ability to strict button to change var strict
+  $("#test").click(function(){$("#startOrRestart").html('<button id="start">START</button>');$("#start").click(function(){clickStart();})});
+  $("#buttonStrict").click(function(){clickStrict();});
+  $("#buttonStart").click(function(){clickStart();});
+  displayRoundCount();
+  //gameInit();
   //soundOnClick();
   //lightOnClick();
   //buttonChangeColor(0)
@@ -78,6 +83,103 @@ $(document).ready(function(){
   //clickDisable();
 }); //document ready
 
+
+var strict=false;
+//below taken from class SimonClass
+var roundArr = [];
+var roundCurrent = 2//null;
+var roundMax=4; //FOR TESTING ONLY change to 20 in production
+var clickCounterUser = 0   //set to 0 in gameUserInput
+
+function clickStrict(){if(strict==false){strict=true; $("#isStrictEnabled").text("Strict is ON")}else{strict=false; $("#isStrictEnabled").text("Strict is OFF")}   }
+function clickStart(){alert("STARTING GAME!");
+  //create restart button to replace start //attach function to restart
+  var html = '<button id="buttonRestart">RESTART GAME</button>';$("#startOrRestart").html(html);  $("#buttonRestart").click(function(){clickRestart()});                    
+  //initiate game
+  gameInit();                    
+} //clickStart
+function clickRestart(){alert("YOU PRESSED RESTART!"); roundArr=[]; roundCurrent=null;displayRoundCount()}
+function displayRoundCount(){  var html = "";  if (roundCurrent==null){html="--"}else{html=roundCurrent}  $("#round").text(html);}  //end displayRoundCount
+
+function gameInit(){  displayRoundCount(); 
+ //prepoulate moves in roundArr                  
+ for(i=0;i<roundMax;i++){roundArr[i]=Math.floor(Math.random()*4);}
+ console.log("gameInit(): roundArr: "+roundArr);
+ //roundCurrent=1;   // **** AFTER TESTING  uncomment this **************************************************************************************************                
+ gameMain();                   
+}//end gameInit
+
+function gameMain(){console.log("gameMain() called")
+  //display moves  **might be better in recursive? function game because this only initiates.                  
+  displayRoundCount();
+  //display Moves to user:
+  displayRoundsToUser()                  
+} //gameMain
+
+
+function displayRoundsToUser(){  
+  clickDisable();
+ (function theLoop (i) {setTimeout(function () {buttonChangeColor(roundArr[i]); 
+  if(i==roundCurrent-1){console.log("displayRoundsToUser():i==roundCurrent-1: change consolelog to clickEnable()");
+  setTimeout(function(){gameUserInput()},1900);
+  } 
+    if (i<roundCurrent-1) {i++;theLoop(i); }  }, 1600);})(0); 
+  console.log("displayRoundsToUser() got to end")
+}//displayRoundsToUser
+
+function buttonChangeColor(buttonNumber){  // from 12oclock: red blue yellow green  0,1,2,3 
+  var whichButton = null;  var newColor = "#000000";  var sound = "";
+  switch(buttonNumber){case 0: whichButton="#boxRed";break; case 1: whichButton="#boxBlue";break; case 2: whichButton="#boxYellow"; break; case 3: whichButton="#boxGreen"; break; } 
+  $(whichButton).css("background", newColor); setTimeout(function(){$(whichButton).removeAttr( 'style' );},900);  //now change color for 1 second. //change back after 1 second  
+  console.log("buttonChangeColor() got to end");
+}//buttonChangeColor
+
+function gameUserInput(){alert("gameUserInput(): user turn!");  clickCounterUser=0; clickEnable();  
+                        
+}//gameUserInput()
+
+function clickEnable(){     
+  $("#boxRed").click(function(){  clickFunction(0);//alert("You clicked Red");
+                               });
+  $("#boxGreen").click(function(){ clickFunction(3);//alert("You clicked Green"); 
+                                 });
+  $("#boxYellow").click(function(){clickFunction(2);//alert("You clicked Yellow"); 
+                                  });
+  $("#boxBlue").click(function(){clickFunction(1);//alert("You clicked Blue"); 
+                                });
+} //end clickEnable
+
+function clickDisable(){ 
+  $("#boxRed").off();
+  $("#boxGreen").off();
+  $("#boxYellow").off();
+  $("#boxBlue").off();
+}
+
+function clickFunction(boxNumber){
+  //click was correct
+  console.log("boxNumber:" + boxNumber + " || roundArr[clickCounterUser]:" + roundArr[clickCounterUser] + " || clickCounterUser:"+clickCounterUser);
+  if(boxNumber == roundArr[clickCounterUser]){    
+    clickCounterUser++;   
+    alert("Good job right box!");
+    if(clickCounterUser>roundCurrent){
+      alert("ALRIGHT ON TO NEXT ROUND B");
+      //roundCurrent should be ++
+      //call displayRoundsToUser
+      // if clickCounterUser > roundMax "USER WINS"   // ********************************************************************************
+    }//if
+  }
+  //click was incorrect
+  else { 
+        alert("wrong box!");
+        displayRoundsToUser(); 
+       }
+}//clickFunction
+
+
+//*** COPIED ******** *** COPIED ******** *** COPIED *********** COPIED ******** *** COPIED ********  use this to add to funcs you reuse
+
+/*
 function buttonCreateStart(){
   var b='<button id="buttonStart">START GAME</button>';
   $("#startOrRestart").html(b);
@@ -90,35 +192,50 @@ function buttonCreateStrict(){
 
 function SimonClass(){  //class 
   this.round=[];
+  this.userClick=[];
   this.strict=false; //true or false
-  this.roundCurrent=5; //should be less or equal  roundMax at all times
+  this.roundCurrent=null; //should be less or equal  roundMax at all times  null at beginging
+ this.roundUserTry=0;  //resets to 0 after every round. 
   
   this.roundMax=5; //FOR TESTING ONLY change to 20 in production
 }//end simon 
 
-function gameInit(){ //initialize game
+function gameInit(){ //initialize game    //*** COPIED ******** *** COPIED ******** *** COPIED *********** COPIED ******** *** COPIED ******** 
   var simon = new SimonClass;  
   buttonCreateStart();
   buttonCreateStrict();
   buttonStrictEnable(simon);
   buttonStartEnable(simon);
-  displayRoundCount(simon);
-  
+  displayRoundCount(simon);  
 }//end gameInit
+
+function gameRestart(simon){ //clickDisable();simon.round=[];simon.userClick=[];simon.strict=false; simon.roundCurrent=null;simon.roundUserTry=0;displayRoundCount(simon);
+$("#startOrRestart").html(""); //delete start 
+$("#strict").html("");//delete strict  
+gameInit();//call init  
+}
+
 
 function buttonStrictEnable(simon){$("#buttonStrict").click(function(){
   if(simon.strict==false){simon.strict=true}else{simon.strict=false}; console.log("simon.strict is:" +simon.strict)}) 
 };//buttonStrictEnable
 function buttonStartEnable(simon){$("#startOrRestart").click(function(){
-  if(simon.round.length==0){alert("START GAME")} else {alert("restart game")}
-  gameStart(simon);
+  if(simon.round.length==0){alert("START GAME"); gameStart(simon);} else {alert("restart game"); gameRestart(simon);}
+  //gameStart(simon);
 })}//buttonStartEnable
+
+
+function buttonCreateRestart(){   /// was removed
+  var b='<button id="buttonRestart">RESTART GAME</button>'; // *********************************************************************
+  $("#startOrRestart").html(b);
+  $("startOrRestart").click
+} //buttonCreateStart 
 
 // *********************************************************
 // GAME LOGIC***********************************************
 
-function  gameStart(simon){ //function for starting the game
-  for(i=0;i<simon.roundMax;i++){simon.round[i]=Math.floor(Math.random()*4);}    //create allmoves
+function  gameStart(simon){ //function for starting the game   
+  for(i=0;i<simon.roundMax;i++){simon.round[i]=Math.floor(Math.random()*4);}    //create allmoves  
   clickDisable(); //disable buttons
   //call game function
   console.log(simon.round);
@@ -134,13 +251,14 @@ function game(simon){//GAME FUNCTION
   displayRoundCount(simon);
   //call function that displays  moves "one to current"
   displayRoundsToUser(simon);
-  //enable clicks
+  //enable clicks 
+  setTimeout(clickEnable(simon), simon.roundCurrent*1500)
   //function that inputs clicks to match moves
   console.log("Im in function game")
 }//end game
 
 
-function buttonChangeColor(buttonNumber){  // from 12oclock: red blue yellow green  0,1,2,3
+function buttonChangeColor(buttonNumber){  // from 12oclock: red blue yellow green  0,1,2,3 //*** COPIED ******** *** COPIED ******** *** COPIED *********** COPIED ******** *** COPIED 
   var whichButton = null;
   var newColor = "#FFFFFF";
   var sound = "";
@@ -165,9 +283,17 @@ var soundBlue=document.getElementById("soundBlue");
 var soundYellow=document.getElementById("soundYellow");
 var soundGreen=document.getElementById("soundGreen");
 
+function userClickedThis(simon,boxNumber){
+    console.log(simon.round);
+  if(boxNumber==simon.round[simon.roundUserTry])   // *****************************************************************************************
+  {alert("picked rightbox");simon.roundUserTry++}
+  //else picked wrong box
+  else {alert("WRONG BOX BRUH")}  
+}// end userClickedThis
+
 // *********************************************************
 // Display functions *************************************
-function displayRoundCount(simon){
+function displayRoundCount(simon){  //*** COPIED ******** *** COPIED ******** *** COPIED *********** COPIED ******** *** COPIED ******** 
   var html = "";
   //if(arguments.length == 0){   console.log("No arguments in displaySteps()");   html += "--"  }
   //else {    console.log("simon.round.length is "+simon.round.length);    html=simon.round.length;  }
@@ -175,28 +301,28 @@ function displayRoundCount(simon){
   $("#round").text(html);
 }  //end displayRoundCount
 
-function displayRoundsToUser(simon){
-  
+function displayRoundsToUser(simon){  //*** COPIED ******** *** COPIED ******** *** COPIED *********** COPIED ******** *** COPIED ******** 
   //for(i=0;i<simon.roundCurrent;i++)  //dont use loop //https://scottiestech.info/2014/07/01/javascript-fun-looping-with-a-delay/
-(function theLoop (i,simon) {    // ***********************************************************************************************************************
+(function theLoop (i,simon) {    
   setTimeout(function () {
     //alert("simon i = " +simon.round + " ||| " + i + " |||" +simon.round[i]); 
     buttonChangeColor(simon.round[i]);;    //change color of box   //wait 1 second then uncolor
-    if (i<simon.roundCurrent) {          // If i > 0, keep going
+    if(i==simon.roundCurrent){clickEnable()}
+    if (i<simon.roundCurrent-1) {          // If i > 0, keep going
       i++;theLoop(i,simon);       // Call the loop again, and pass it the current value of i
     }
   }, 1600);
-})(0,simon);                    // ***********************************************************************************************************************
+})(0,simon);                    
 }//displayRoundsToUser
 
-function clickEnable(){    
-  $("#boxRed").click(function(){alert("You clicked Red")});
-  $("#boxGreen").click(function(){alert("You clicked Green")});
-  $("#boxYellow").click(function(){alert("You clicked Yellow")});
-  $("#boxBlue").click(function(){alert("You clicked Blue")});
+function clickEnable(simon){     //*** COPIED ******** *** COPIED ******** *** COPIED *********** COPIED ******** *** COPIED ******** 
+  $("#boxRed").click(function(){ userClickedThis(simon,0)});  //alert("You clicked Red");
+  $("#boxGreen").click(function(){userClickedThis(simon,1)}); //alert("You clicked Green"); 
+  $("#boxYellow").click(function(){userClickedThis(simon,2)}); //alert("You clicked Yellow");
+  $("#boxBlue").click(function(){userClickedThis(simon,3)}); //alert("You clicked Blue");
 } //end clickEnable
 
-function clickDisable(){
+function clickDisable(){ //*** COPIED ******** *** COPIED ******** *** COPIED *********** COPIED ******** *** COPIED ********
   $("#boxRed").off();
   $("#boxGreen").off();
   $("#boxYellow").off();
@@ -235,4 +361,6 @@ function lightOnClick(){
 }
 
 // $(whichButton).css("background", newColor);
+
+*/
 </script>
