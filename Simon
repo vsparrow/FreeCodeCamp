@@ -88,7 +88,7 @@ $(document).ready(function(){
 var strict=false;
 //below taken from class SimonClass
 var roundArr = [];
-var roundCurrent = 2//null;
+var roundCurrent = null//null;
 var roundMax=4; //FOR TESTING ONLY change to 20 in production
 var clickCounterUser = 0   //set to 0 in gameUserInput
 
@@ -99,19 +99,20 @@ function clickStart(){alert("STARTING GAME!");
   //initiate game
   gameInit();                    
 } //clickStart
-function clickRestart(){alert("YOU PRESSED RESTART!"); roundArr=[]; roundCurrent=null;displayRoundCount()}
+function clickRestart(){alert("YOU PRESSED RESTART!"); roundArr=[]; roundCurrent=null;clickCounterUser = 0;gameInit();}  // *************************
 function displayRoundCount(){  var html = "";  if (roundCurrent==null){html="--"}else{html=roundCurrent}  $("#round").text(html);}  //end displayRoundCount
 
 function gameInit(){  displayRoundCount(); 
  //prepoulate moves in roundArr                  
  for(i=0;i<roundMax;i++){roundArr[i]=Math.floor(Math.random()*4);}
  console.log("gameInit(): roundArr: "+roundArr);
- //roundCurrent=1;   // **** AFTER TESTING  uncomment this **************************************************************************************************                
+ roundCurrent=1;   // **** AFTER TESTING  uncomment this **************************************************************************************************                
  gameMain();                   
 }//end gameInit
 
 function gameMain(){console.log("gameMain() called")
-  //display moves  **might be better in recursive? function game because this only initiates.                  
+  //display moves  **might be better in recursive? function game because this only initiates. 
+ // if(roundCurrent==null){roundCurrent=1}                  
   displayRoundCount();
   //display Moves to user:
   displayRoundsToUser()                  
@@ -167,6 +168,7 @@ function clickFunction(boxNumber){
     else if(clickCounterUser==roundCurrent){
       alert("ALRIGHT ON TO NEXT ROUND B");
       roundCurrent++; //roundCurrent should be ++
+      displayRoundCount();
       displayRoundsToUser();//call displayRoundsToUser
       
     }//if
