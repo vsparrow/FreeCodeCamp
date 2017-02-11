@@ -99,7 +99,8 @@ function clickStart(){alert("STARTING GAME!");
   //initiate game
   gameInit();                    
 } //clickStart
-function clickRestart(){alert("YOU PRESSED RESTART!"); roundArr=[]; roundCurrent=null;clickCounterUser = 0;gameInit();}  // *************************
+function clickRestart(){ if(arguments[0]=="new"){alert("NEW GAME STARTED!")}else {alert("YOU PRESSED RESTART!");} // ******************************************************************
+   clickDisable();roundArr=[]; roundCurrent=null;clickCounterUser = 0;gameInit();} 
 function displayRoundCount(){  var html = "";  if (roundCurrent==null){html="--"}else{html=roundCurrent}  $("#round").text(html);}  //end displayRoundCount
 
 function gameInit(){  displayRoundCount(); 
@@ -164,7 +165,10 @@ function clickFunction(boxNumber){
   if(boxNumber == roundArr[clickCounterUser]){    
     clickCounterUser++;   
     alert("Good job right box!");
-    if(clickCounterUser==roundMax ){alert("WIN GAME"); clickDisable()}   // ********************************************************************************
+    if(clickCounterUser==roundMax ){alert("WIN GAME"); clickDisable()
+      //make restart button New game button                                // ********************************************************************************
+      var html = '<button id="buttonNewGame">NEW GAME</button>';$("#startOrRestart").html(html);  $("#buttonNewGame").click(function(){clickRestart("new")}); 
+    }  
     else if(clickCounterUser==roundCurrent){
       alert("ALRIGHT ON TO NEXT ROUND B");
       roundCurrent++; //roundCurrent should be ++
