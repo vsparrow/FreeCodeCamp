@@ -158,15 +158,15 @@ function clickDisable(){
 
 function clickFunction(boxNumber){
   //click was correct
-  console.log("boxNumber:" + boxNumber + " || roundArr[clickCounterUser]:" + roundArr[clickCounterUser] + " || clickCounterUser:"+clickCounterUser);
+  console.log("boxNumber:" + boxNumber + " || roundArr[clickCounterUser]:" + roundArr[clickCounterUser] + " || clickCounterUser:"+clickCounterUser +" || roundCurrent:" + roundCurrent);
   if(boxNumber == roundArr[clickCounterUser]){    
     clickCounterUser++;   
     alert("Good job right box!");
-    if(clickCounterUser>roundCurrent){
+    if(clickCounterUser==roundCurrent){
       alert("ALRIGHT ON TO NEXT ROUND B");
-      //roundCurrent should be ++
-      //call displayRoundsToUser
-      // if clickCounterUser > roundMax "USER WINS"   // ********************************************************************************
+      roundCurrent++; //roundCurrent should be ++
+      displayRoundsToUser();//call displayRoundsToUser
+      if(clickCounterUser==roundMax ){alert("WIN GAME")}// if clickCounterUser >  "USER WINS"   // ********************************************************************************
     }//if
   }
   //click was incorrect
