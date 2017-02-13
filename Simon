@@ -19,10 +19,11 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
 -->
 <p>
 <div id="configButtons" >
-  <span id="startOrRestart">Place start or restart button here</span>
-  <span id="strict">Place strict button here</span>
+  <span id="startOrRestart"><button id="buttonStart">START</button></span>
+  <span id="strict"><button id="buttonStrict">STRICT</button></span>
 </div>
 <div id="roundIntro">Number of Steps in this round: <span id="round"></span></div>
+<div id="isStrictEnabled">Strict is off</div>
 <div id="simonButtons" class="container">
   <div class="row">
   <div id="boxGreen" class="box col-xs-4"></div>
@@ -33,15 +34,25 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
   <div id="boxBlue" class="box col-xs-4"></div>  
   </div>  
 </div>
-<button id="test">TEST</button>
+<button id="test">TEST</button> (CURRENTLY RESETS EVERYTHING) Button for testing individual methods. remove afterwards
+<p></p>
 <audio id="soundRed" ><source src="https://s3.amazonaws.com/freecodecamp/simonSound1.mp3" type="audio/mpeg" ></audio>
 <audio id="soundBlue"><source src="https://s3.amazonaws.com/freecodecamp/simonSound2.mp3" type="audio/mpeg"></audio>
 <audio id="soundYellow"> <source src="https://s3.amazonaws.com/freecodecamp/simonSound3.mp3" type="audio/mpeg"></audio>
 <audio id="soundGreen">  <source src="https://s3.amazonaws.com/freecodecamp/simonSound4.mp3" type="audio/mpeg"></audio>
 
 
-<br><b> displayRoundsToUser(simon); //call function that displays  moves "one to current"
-  <br>work on light on click <br>enable sound on click</b>
+<br><b> if press reset during display of moves, does not work. </b> 
+<br>work on strict
+
+
+<p></p>
+DONE: Restarting but reusing methods<br>
+clickFunction: what to do after finishing current round, how to proceed? <br>
+click and display working now start on reset::<br>
+if restart pressed will display but not progress to click
+<!--
+  <br> IF CLICK RESTART SEEMS TO KEEP ARRAY. LOG CONSOLE <br> if you pick wrong box should give chance to pick right one:: function game()->function userClickedThis():<br>work on light on click <br>enable sound on click
 <br>function needed
 <br>gameInitiate -- initiate the program
 <br>game start -- start the actual game instance
@@ -53,15 +64,21 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
 <br>button enable strict mode
 <br>current step count display
 <br>
-DONE:1:Working on: function buttonChangeColor: add sound
+DONE:1:Working on: function buttonChangeColor: add sound <br>
+2: displayRoundsToUser(simon); //call function that displays  moves "one to current"
+3: gameRestart(simon) added
+
+-->
 </html>
 
 <css>
 .box {width:100px;height:100px}
+
 #boxRed{background:#f00;}
 #boxBlue{background:#00f;}
 #boxYellow {background:#FFFF00}
 #boxGreen {background:#0f0;}
+.myClick {background:#000000;}
 </css>
 
 <script>
@@ -92,6 +109,12 @@ var roundCurrent = null//null;
 var roundMax=4; //FOR TESTING ONLY change to 20 in production
 var clickCounterUser = 0   //set to 0 in gameUserInput
 
+var soundRed=document.getElementById("soundRed");  
+var soundBlue=document.getElementById("soundBlue");
+var soundYellow=document.getElementById("soundYellow");
+var soundGreen=document.getElementById("soundGreen");
+
+
 function clickStrict(){if(strict==false){strict=true; $("#isStrictEnabled").text("Strict is ON")}else{strict=false; $("#isStrictEnabled").text("Strict is OFF")}   }
 function clickStart(){alert("STARTING GAME!");
   //create restart button to replace start //attach function to restart
@@ -99,7 +122,7 @@ function clickStart(){alert("STARTING GAME!");
   //initiate game
   gameInit();                    
 } //clickStart
-function clickRestart(){ if(arguments[0]=="new"){alert("NEW GAME STARTED!")}else {alert("YOU PRESSED RESTART!");} // ******************************************************************
+function clickRestart(){ if(arguments[0]=="new"){alert("NEW GAME STARTED!")}else if(strict==true){alert("restarting game now!")} else {alert("YOU PRESSED RESTART!"); } 
    clickDisable();roundArr=[]; roundCurrent=null;clickCounterUser = 0;gameInit();} 
 function displayRoundCount(){  var html = "";  if (roundCurrent==null){html="--"}else{html=roundCurrent}  $("#round").text(html);}  //end displayRoundCount
 
@@ -126,30 +149,42 @@ function displayRoundsToUser(){
   if(i==roundCurrent-1){console.log("displayRoundsToUser():i==roundCurrent-1: change consolelog to clickEnable()");
   setTimeout(function(){gameUserInput()},1900);
   } 
-    if (i<roundCurrent-1) {i++;theLoop(i); }  }, 1600);})(0); 
+    if (i<roundCurrent-1 ) {i++;theLoop(i); }  }, 1600);})(0);
   console.log("displayRoundsToUser() got to end")
 }//displayRoundsToUser
 
 function buttonChangeColor(buttonNumber){  // from 12oclock: red blue yellow green  0,1,2,3 
   var whichButton = null;  var newColor = "#000000";  var sound = "";
-  switch(buttonNumber){case 0: whichButton="#boxRed";break; case 1: whichButton="#boxBlue";break; case 2: whichButton="#boxYellow"; break; case 3: whichButton="#boxGreen"; break; } 
-  $(whichButton).css("background", newColor); setTimeout(function(){$(whichButton).removeAttr( 'style' );},900);  //now change color for 1 second. //change back after 1 second  
+  switch(buttonNumber){
+    case 0: whichButton="#boxRed";sound = soundRed;break; 
+    case 1: whichButton="#boxBlue";sound = soundBlue;break; 
+    case 2: whichButton="#boxYellow"; sound = soundYellow;break; 
+    case 3: whichButton="#boxGreen"; sound = soundGreen;break; } 
+  $(whichButton).css("background", newColor); sound.play();
+  setTimeout(function(){$(whichButton).removeAttr( 'style' );},900);  //now change color for 1 second. //change back after 1 second  
   console.log("buttonChangeColor() got to end");
 }//buttonChangeColor
 
-function gameUserInput(){alert("gameUserInput(): user turn!");  clickCounterUser=0; clickEnable();  
+function gameUserInput(){//alert("gameUserInput(): user turn!");  
+                         clickCounterUser=0; clickEnable();  
                         
 }//gameUserInput()
 
-function clickEnable(){     
-  $("#boxRed").click(function(){  clickFunction(0);//alert("You clicked Red");
+function clickEnable(){     //$("#boxRed").css("background", "#000000");
+  //$("#boxRed").mousedown(function(){$("#boxRed").css("background", "#000000");});
+  //$("#boxRed").mouseleave(function(){$("#boxRed").css("background", "#f00;");});
+  //$("#boxRed").click(function(){$("#boxRed").addClass("myClick");});  //*************************************** HERE LOOOK !!!!!!!!!!!!!!!!
+  //setTimeout(function(){$("#boxRed").remove(".myClick");},700)
+  
+  $("#boxRed").click(function(){  soundRed.play();clickFunction(0);//alert("You clicked Red");
                                });
-  $("#boxGreen").click(function(){ clickFunction(3);//alert("You clicked Green"); 
+  $("#boxGreen").click(function(){ soundGreen.play();clickFunction(3);//alert("You clicked Green"); 
                                  });
-  $("#boxYellow").click(function(){clickFunction(2);//alert("You clicked Yellow"); 
+  $("#boxYellow").click(function(){soundYellow.play();clickFunction(2);//alert("You clicked Yellow"); 
                                   });
-  $("#boxBlue").click(function(){clickFunction(1);//alert("You clicked Blue"); 
+  $("#boxBlue").click(function(){soundBlue.play();clickFunction(1);//alert("You clicked Blue"); 
                                 });
+ 
 } //end clickEnable
 
 function clickDisable(){ 
@@ -164,13 +199,13 @@ function clickFunction(boxNumber){
   console.log("boxNumber:" + boxNumber + " || roundArr[clickCounterUser]:" + roundArr[clickCounterUser] + " || clickCounterUser:"+clickCounterUser +" || roundCurrent:" + roundCurrent);
   if(boxNumber == roundArr[clickCounterUser]){    
     clickCounterUser++;   
-    alert("Good job right box!");
-    if(clickCounterUser==roundMax ){alert("WIN GAME"); clickDisable()
+    //alert("Good job right box!");
+    if(clickCounterUser==roundMax ){alert("WIN GAME"); clickDisable();clickRestart("new");
       //make restart button New game button                                // ********************************************************************************
       var html = '<button id="buttonNewGame">NEW GAME</button>';$("#startOrRestart").html(html);  $("#buttonNewGame").click(function(){clickRestart("new")}); 
     }  
     else if(clickCounterUser==roundCurrent){
-      alert("ALRIGHT ON TO NEXT ROUND B");
+      //alert("ALRIGHT ON TO NEXT ROUND B");
       roundCurrent++; //roundCurrent should be ++
       displayRoundCount();
       displayRoundsToUser();//call displayRoundsToUser
@@ -180,7 +215,9 @@ function clickFunction(boxNumber){
   //click was incorrect
   else { 
         alert("wrong box!");
-        displayRoundsToUser(); 
+        if(strict==true){alert("strict was enabled, restarting game"); clickRestart(); //***************************************************
+                        }//strict
+        else {displayRoundsToUser(); }
        }
 }//clickFunction
 
@@ -277,7 +314,7 @@ function buttonChangeColor(buttonNumber){  // from 12oclock: red blue yellow gre
     case 3: whichButton="#boxGreen";  newColor="#000000"; sound=soundGreen;   break; //b3ffcc
    } //switch
   //now change color for 1 second.
-  $(whichButton).css("background", newColor);
+  $(whichButton).css("background", newColor);     
   //play sound for 1 second also
   //soundRed.play();
   sound.play();
@@ -286,7 +323,7 @@ function buttonChangeColor(buttonNumber){  // from 12oclock: red blue yellow gre
 }//buttonChangeColor
 
 
-var soundRed=document.getElementById("soundRed");
+var soundRed=document.getElementById("soundRed");  //*** COPIED ******** *** COPIED ******** *** COPIED *********** COPIED ******** *** COPIED 
 var soundBlue=document.getElementById("soundBlue");
 var soundYellow=document.getElementById("soundYellow");
 var soundGreen=document.getElementById("soundGreen");
