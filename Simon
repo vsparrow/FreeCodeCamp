@@ -18,13 +18,16 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
 <br>
 -->
 <p>
-<div class="">  
+<div class="container myCenter">   <!-- container main -->
+<div class="row">
+ <!-- span12 -->
 <div id="configButtons" >
   <span id="startOrRestart"><button id="buttonStart">START</button></span>
   <span id="strict"><button id="buttonStrict">STRICT</button></span>
 </div>
 <div id="roundIntro">Number of Steps in this round: <span id="round"></span></div>
 <div id="isStrictEnabled">Strict is off</div>
+  
 <div id="simonButtons" class="container">
   <div class="row">
   <div id="boxGreen" class="box boxGreen col-xs-4 "></div>
@@ -35,7 +38,10 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
   <div id="boxBlue" class="box boxBlue col-xs-4 "></div>  
   </div>  
 </div>
-</div>  
+   <!-- end span12 -->
+  </div> <!-- row --> 
+</div>   <!-- end container main -->
+
 <!-- <button id="test">TEST</button> (CURRENTLY RESETS EVERYTHING) Button for testing individual methods. remove afterwards -->
 <p></p>
 <audio id="soundRed" ><source src="https://s3.amazonaws.com/freecodecamp/simonSound1.mp3" type="audio/mpeg" ></audio>
@@ -43,7 +49,7 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
 <audio id="soundYellow"> <source src="https://s3.amazonaws.com/freecodecamp/simonSound3.mp3" type="audio/mpeg"></audio>
 <audio id="soundGreen">  <source src="https://s3.amazonaws.com/freecodecamp/simonSound4.mp3" type="audio/mpeg"></audio>
 
-
+<!--
 <br><b> look at function clickEnable()<br>if press reset during display of moves, does not work. </b> 
 <br>work on strict
 
@@ -53,6 +59,9 @@ DONE: Restarting but reusing methods<br>
 clickFunction: what to do after finishing current round, how to proceed? <br>
 click and display working now start on reset::<br>
 if restart pressed will display but not progress to click
+
+
+-->
 <!--
   <br> IF CLICK RESTART SEEMS TO KEEP ARRAY. LOG CONSOLE <br> if you pick wrong box should give chance to pick right one:: function game()->function userClickedThis():<br>work on light on click <br>enable sound on click
 <br>function needed
@@ -75,6 +84,9 @@ DONE:1:Working on: function buttonChangeColor: add sound <br>
 
 <css>
 
+.myCenter{  
+  padding: 20px;  width:225px}
+
 
 .box {width:100px;height:100px}
 
@@ -84,6 +96,7 @@ DONE:1:Working on: function buttonChangeColor: add sound <br>
 .boxYellow {background:#FFFF00}
 .boxGreen {background:#0f0;}
 .boxFocus {background:#000000;}
+
 
 
 </css>
@@ -113,7 +126,7 @@ var strict=false;
 //below taken from class SimonClass
 var roundArr = [];
 var roundCurrent = null//null;
-var roundMax=4; //FOR TESTING ONLY change to 20 in production
+var roundMax=5; //FOR TESTING ONLY change to 20 in production
 var clickCounterUser = 0   //set to 0 in gameUserInput
 
 var soundRed=document.getElementById("soundRed");  
