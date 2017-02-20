@@ -18,6 +18,7 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
 <br>
 -->
 <p>
+<div class="">  
 <div id="configButtons" >
   <span id="startOrRestart"><button id="buttonStart">START</button></span>
   <span id="strict"><button id="buttonStrict">STRICT</button></span>
@@ -26,15 +27,16 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
 <div id="isStrictEnabled">Strict is off</div>
 <div id="simonButtons" class="container">
   <div class="row">
-  <div id="boxGreen" class="box col-xs-4"></div>
-  <div id="boxRed" class="box col-xs-4"></div>
+  <div id="boxGreen" class="box boxGreen col-xs-4 "></div>
+  <div id="boxRed" class="box boxRed col-xs-4 "></div>
   </div>
   <div class="row">
-  <div id="boxYellow" class="box col-xs-4"></div>
-  <div id="boxBlue" class="box col-xs-4"></div>  
+  <div id="boxYellow" class="box boxYellow col-xs-4  "></div>
+  <div id="boxBlue" class="box boxBlue col-xs-4 "></div>  
   </div>  
 </div>
-<button id="test">TEST</button> (CURRENTLY RESETS EVERYTHING) Button for testing individual methods. remove afterwards
+</div>  
+<!-- <button id="test">TEST</button> (CURRENTLY RESETS EVERYTHING) Button for testing individual methods. remove afterwards -->
 <p></p>
 <audio id="soundRed" ><source src="https://s3.amazonaws.com/freecodecamp/simonSound1.mp3" type="audio/mpeg" ></audio>
 <audio id="soundBlue"><source src="https://s3.amazonaws.com/freecodecamp/simonSound2.mp3" type="audio/mpeg"></audio>
@@ -42,7 +44,7 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
 <audio id="soundGreen">  <source src="https://s3.amazonaws.com/freecodecamp/simonSound4.mp3" type="audio/mpeg"></audio>
 
 
-<br><b> if press reset during display of moves, does not work. </b> 
+<br><b> look at function clickEnable()<br>if press reset during display of moves, does not work. </b> 
 <br>work on strict
 
 
@@ -72,13 +74,18 @@ DONE:1:Working on: function buttonChangeColor: add sound <br>
 </html>
 
 <css>
+
+
 .box {width:100px;height:100px}
 
-#boxRed{background:#f00;}
-#boxBlue{background:#00f;}
-#boxYellow {background:#FFFF00}
-#boxGreen {background:#0f0;}
-.myClick {background:#000000;}
+.boxRed{background:#f00;}
+/* #boxRed{background:#f00;} */
+.boxBlue{background:#00f;}
+.boxYellow {background:#FFFF00}
+.boxGreen {background:#0f0;}
+.boxFocus {background:#000000;}
+
+
 </css>
 
 <script>
@@ -118,7 +125,7 @@ var soundGreen=document.getElementById("soundGreen");
 function clickStrict(){if(strict==false){strict=true; $("#isStrictEnabled").text("Strict is ON")}else{strict=false; $("#isStrictEnabled").text("Strict is OFF")}   }
 function clickStart(){alert("STARTING GAME!");
   //create restart button to replace start //attach function to restart
-  var html = '<button id="buttonRestart">RESTART GAME</button>';$("#startOrRestart").html(html);  $("#buttonRestart").click(function(){clickRestart()});                    
+  var html = '<button id="buttonRestart">NEW GAME</button>';$("#startOrRestart").html(html);  $("#buttonRestart").click(function(){clickRestart()});                    
   //initiate game
   gameInit();                    
 } //clickStart
@@ -165,7 +172,7 @@ function buttonChangeColor(buttonNumber){  // from 12oclock: red blue yellow gre
   console.log("buttonChangeColor() got to end");
 }//buttonChangeColor
 
-function gameUserInput(){//alert("gameUserInput(): user turn!");  
+function gameUserInput(){alert("YOUR TURN!");//alert("gameUserInput(): user turn!");  
                          clickCounterUser=0; clickEnable();  
                         
 }//gameUserInput()
@@ -173,16 +180,28 @@ function gameUserInput(){//alert("gameUserInput(): user turn!");
 function clickEnable(){     //$("#boxRed").css("background", "#000000");
   //$("#boxRed").mousedown(function(){$("#boxRed").css("background", "#000000");});
   //$("#boxRed").mouseleave(function(){$("#boxRed").css("background", "#f00;");});
-  //$("#boxRed").click(function(){$("#boxRed").addClass("myClick");});  //*************************************** HERE LOOOK !!!!!!!!!!!!!!!!
-  //setTimeout(function(){$("#boxRed").remove(".myClick");},700)
+  //$("#boxRed").click(function(){$("#boxRed").addClass("myClick");}); 
   
-  $("#boxRed").click(function(){  soundRed.play();clickFunction(0);//alert("You clicked Red");
+  $("#boxRed").click(function(){ $("#boxRed").addClass("boxFocus"); soundRed.play(); //clickFunction(0);   //*************************************** HERE LOOOK !!!!!!!!!!!!!!!!
+                               //alert("You clicked Red");
+                               //$("#boxRed").mousedown(function(){ $("#boxRed").addClass("boxFocus"); })  
+                               //$("#boxRed").mousemove(function(){ $("#boxRed").removeClass("boxFocus")})
+                                setTimeout(function(){$("#boxRed").removeClass("boxFocus");},400)  // <-- by making this short than below, with get clicks that look like they should                            
+                                setTimeout(function(){clickFunction(0);},500);
+                                console.log("GOT TO clickENABLE() boxred end")
                                });
-  $("#boxGreen").click(function(){ soundGreen.play();clickFunction(3);//alert("You clicked Green"); 
+  $("#boxGreen").click(function(){  $("#boxGreen").addClass("boxFocus"); soundGreen.play();//clickFunction(3);//alert("You clicked Green"); 
+                                setTimeout(function(){$("#boxGreen").removeClass("boxFocus");},400)                              
+                                setTimeout(function(){clickFunction(3);},500);
+                                
                                  });
-  $("#boxYellow").click(function(){soundYellow.play();clickFunction(2);//alert("You clicked Yellow"); 
+  $("#boxYellow").click(function(){ $("#boxYellow").addClass("boxFocus"); soundYellow.play();//clickFunction(2);//alert("You clicked Yellow"); 
+                                   setTimeout(function(){$("#boxYellow").removeClass("boxFocus");},400)                             
+                                setTimeout(function(){clickFunction(2);},500);
                                   });
-  $("#boxBlue").click(function(){soundBlue.play();clickFunction(1);//alert("You clicked Blue"); 
+  $("#boxBlue").click(function(){ $("#boxBlue").addClass("boxFocus"); soundBlue.play();//clickFunction(1);//alert("You clicked Blue"); 
+                                 setTimeout(function(){$("#boxBlue").removeClass("boxFocus");},400)                              
+                                setTimeout(function(){clickFunction(1);},500);
                                 });
  
 } //end clickEnable
